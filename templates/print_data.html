@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='print_data.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Patient Information</h1>
+        <table class="hidden-table">
+            <tr>
+                <td><b>Name:</b></td>
+                <td>{{ patient_info.name }}</td>
+            </tr>
+            <tr>
+                <td><b>Age:</b></td>
+                <td>{{ patient_info.age }}</td>
+            </tr>
+            <tr>
+                <td><b>Gender:</b></td>
+                <td>{{ patient_info.gender }}</td>
+            </tr>
+            <tr>
+                <td><b>Village:</b></td>
+                <td>{{ patient_info.village }}</td>
+            </tr>
+            <tr>
+                <td><b>Symptoms:</b></td>
+                <td>
+                    <ul>
+                        {% for symptom in symptoms %}
+                            <li>{{ symptom }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <h2>Predictions</h2>
+        <table class="hidden-table">
+            {% for model, disease in predictions.items() %}
+                <tr>
+                    <td><b>{{ model.replace("_", " ") }}:</b></td>
+                    <td>{{ disease }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <div class="action-buttons">
+            <button onclick="window.print()">Print</button>
+            <button onclick="window.location.href='/'">Return to Home</button>
+        </div>
+    </div>
+</body>
+</html>

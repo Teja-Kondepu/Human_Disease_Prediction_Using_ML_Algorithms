@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Disease Predictor System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Disease Predictor Using Machine Learning Algorithms</h1>
+        <form method="POST" action="/predict">
+            <table class="hidden-table">
+                <tr>
+                    <td><label for="symptom1">Symptom 1</label></td>
+                    <td>
+                        <select id="symptom1" name="symptom1" class="symptom-dropdown">
+                            <option value="">Select a symptom</option>
+                            {% for symptom in symptoms %}
+                                <option value="{{ symptom }}" {% if selected_symptoms and selected_symptoms[0] == symptom %}selected{% endif %}>{{ symptom }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="symptom2">Symptom 2</label></td>
+                    <td>
+                        <select id="symptom2" name="symptom2" class="symptom-dropdown">
+                            <option value="">Select a symptom</option>
+                            {% for symptom in symptoms %}
+                                <option value="{{ symptom }}" {% if selected_symptoms and selected_symptoms[1] == symptom %}selected{% endif %}>{{ symptom }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="symptom3">Symptom 3</label></td>
+                    <td>
+                        <select id="symptom3" name="symptom3" class="symptom-dropdown">
+                            <option value="">Select a symptom</option>
+                            {% for symptom in symptoms %}
+                                <option value="{{ symptom }}" {% if selected_symptoms and selected_symptoms[2] == symptom %}selected{% endif %}>{{ symptom }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="symptom4">Symptom 4</label></td>
+                    <td>
+                        <select id="symptom4" name="symptom4" class="symptom-dropdown">
+                            <option value="">Select a symptom</option>
+                            {% for symptom in symptoms %}
+                                <option value="{{ symptom }}" {% if selected_symptoms and selected_symptoms[3] == symptom %}selected{% endif %}>{{ symptom }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="symptom5">Symptom 5</label></td>
+                    <td>
+                        <select id="symptom5" name="symptom5" class="symptom-dropdown">
+                            <option value="">Select a symptom</option>
+                            {% for symptom in symptoms %}
+                                <option value="{{ symptom }}" {% if selected_symptoms and selected_symptoms[4] == symptom %}selected{% endif %}>{{ symptom }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" id="model" name="model" value="">
+            <input type="hidden" id="predictions" name="predictions" value='{{ predictions | tojson | safe }}'>
+            <table class="prediction-table">
+                <tr>
+                    <td class="model-name">Decision Tree</td>
+                    <td><button type="submit" class="model-button" onclick="document.getElementById('model').value='Decision_Tree'">Predict</button></td>
+                    <td class="prediction-label">{% if predictions.Decision_Tree %}{{ predictions.Decision_Tree }}{% else %}--{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="model-name">Random Forest</td>
+                    <td><button type="submit" class="model-button" onclick="document.getElementById('model').value='Random_Forest'">Predict</button></td>
+                    <td class="prediction-label">{% if predictions.Random_Forest %}{{ predictions.Random_Forest }}{% else %}--{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="model-name">Naive Bayes</td>
+                    <td><button type="submit" class="model-button" onclick="document.getElementById('model').value='Naive_Bayes'">Predict</button></td>
+                    <td class="prediction-label">{% if predictions.Naive_Bayes %}{{ predictions.Naive_Bayes }}{% else %}--{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="model-name">Support Vector Machine</td>
+                    <td><button type="submit" class="model-button" onclick="document.getElementById('model').value='SVM'">Predict</button></td>
+                    <td class="prediction-label">{% if predictions.SVM %}{{ predictions.SVM }}{% else %}--{% endif %}</td>
+                </tr>
+            </table>
+            <div class="form-group action-buttons">
+                <button type="submit" name="reset" class="action-button">Reset Inputs</button>
+                <button type="button" class="action-button" onclick="window.location.href='/'">Return to Home</button>
+                <button type="button" class="action-button" onclick="redirectToPrintData()">Print Data</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function redirectToPrintData() {
+            const symptoms = [
+                document.getElementById('symptom1').value,
+                document.getElementById('symptom2').value,
+                document.getElementById('symptom3').value,
+                document.getElementById('symptom4').value,
+                document.getElementById('symptom5').value
+            ];
+            const predictions = document.getElementById('predictions').value;
+            window.location.href = `/print_data?symptoms=${encodeURIComponent(symptoms.join(','))}&predictions=${encodeURIComponent(predictions)}`;
+        }
+
+        $(document).ready(function() {
+            $('.symptom-dropdown').select2();
+        });
+    </script>
+</body>
+</html>
