@@ -85,7 +85,7 @@ label {
 }
 
 .action-button {
-    background-color: #f44336;
+    background-color: #14e825;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -99,5 +99,5 @@ label {
 }
 
 .action-button:hover {
-    background-color: #d32f2f;
+    background-color: #14e825;
 }
