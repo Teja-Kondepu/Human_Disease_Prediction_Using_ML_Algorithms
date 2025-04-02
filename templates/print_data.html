@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Data</title>
+    <title>Patient Data</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='print_data.css') }}">
 </head>
 <body>
@@ -49,8 +49,9 @@
         </table>
 
         <div class="action-buttons">
-            <button onclick="window.print()">Print</button>
-            <button onclick="window.location.href='/'">Return to Home</button>
+            <button class="action-button print-button" onclick="window.print()">Print</button>
+            <button class="action-button" onclick="window.location.href='/reset'">Return to Home</button>
+            <button type="button" class="action-button back-button" onclick="window.location.href='/predictor'">Back</button>
         </div>
     </div>
 </body>

@@ -12,16 +12,23 @@ body {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    border: 2px solid green;
 }
 
-h1 {
-    color: #13eab7;
+h1.main-heading {
+    color: #b8ea13;
+    font-size: 35px;
+    margin-bottom: 20px;
+}
+
+.symptom-section, .prediction-section {
+    margin-bottom: 20px;
 }
 
 .hidden-table {
     margin: 0 auto;
     border-collapse: collapse;
-    width: 70%;
+    width: 60%;
 }
 
 .hidden-table td {
@@ -36,11 +43,32 @@ label {
 }
 
 .symptom-dropdown {
-    width: 70%;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-symptom-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 22px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.add-symptom-button:hover {
+    background-color: #45a049;
 }
 
 .prediction-table {
-    margin: 20px auto;
+    margin: 0 auto;
     border-collapse: collapse;
     width: 70%;
 }
@@ -55,6 +83,7 @@ label {
     width: 200px;
     font-weight: bold;
     text-align: right;
+    
 }
 
 .model-button {
@@ -85,7 +114,7 @@ label {
 }
 
 .action-button {
-    background-color: #14e825;
+    background-color: #45a049;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -99,5 +128,5 @@ label {
 }
 
 .action-button:hover {
-    background-color: #14e825;
+    background-color: #d32f2f;
 }

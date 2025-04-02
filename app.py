@@ -7,10 +7,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn import svm
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, confusion_matrix
-import seaborn as sb
-import matplotlib.pyplot as plt
-import os
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Set a secret key for the session
@@ -83,11 +79,18 @@ def patient_info():
 
 @app.route('/predictor')
 def index():
-    return render_template('index.html', symptoms=valid_symptoms, predictions={}, selected_symptoms=["", "", "", "", ""])
+    if 'symptom_count' not in session:
+        session['symptom_count'] = 5
+    selected_symptoms = session.get('selected_symptoms', [""] * session['symptom_count'])
+    predictions = session.get('predictions', {})
+    return render_template('index.html', symptoms=valid_symptoms, predictions=predictions, selected_symptoms=selected_symptoms, symptom_count=session['symptom_count'])
 
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'reset' in request.form:
+        session.pop('symptom_count', None)
+        session.pop('selected_symptoms', None)
+        session.pop('predictions', None)
         return redirect(url_for('index'))
     elif 'exit' in request.form:
         return 'Exiting the system...'
@@ -96,13 +99,17 @@ def predict():
     if not model_name:
         return redirect(url_for('index'))
 
-    symptoms_selected = [
-        request.form.get('symptom1'),
-        request.form.get('symptom2'),
-        request.form.get('symptom3'),
-        request.form.get('symptom4'),
-        request.form.get('symptom5')
-    ]
+    # Update symptom count in session
+    symptom_count = int(request.form.get('symptom_count', 5))
+    session['symptom_count'] = symptom_count
+
+    symptoms_selected = []
+    for i in range(1, symptom_count + 1):
+        symptom = request.form.get(f'symptom{i}')
+        if symptom:
+            symptoms_selected.append(symptom)
+
+    session['selected_symptoms'] = symptoms_selected
 
     inputtest = [0] * len(X.columns)
     for symptom in symptoms_selected:
@@ -124,20 +131,25 @@ def predict():
 
     # Calculating accuracy
     accuracy = model.score(X_test, y_test)
-    print(f"Accuracy of {model_name.replace('_', ' ')}: {accuracy:.7f}")
+    print(f"Accuracy of {model_name.replace('_', ' ')}: {accuracy:.15f}")
 
-    predictions = json.loads(request.form.get('predictions', '{}'))
+    predictions = session.get('predictions', {})
     predictions[model_name] = disease
+    session['predictions'] = predictions
 
-    return render_template('index.html', symptoms=valid_symptoms, predictions=predictions, selected_symptoms=symptoms_selected)
+    return render_template('index.html', symptoms=valid_symptoms, predictions=predictions, selected_symptoms=symptoms_selected, symptom_count=symptom_count)
 
 @app.route('/print_data')
 def print_data():
     patient_info = session.get('patient_info', {})
-    symptoms = request.args.get('symptoms', '').split(',')
-    predictions = request.args.get('predictions', '{}')
-    predictions = json.loads(predictions)
+    symptoms = session.get('selected_symptoms', [])
+    predictions = session.get('predictions', {})
     return render_template('print_data.html', patient_info=patient_info, symptoms=symptoms, predictions=predictions)
+
+@app.route('/reset')
+    def reset():
+    session.clear()
+    return redirect(url_for('landing'))
 
 if __name__ == '__main__':
     app.run(debug=True)
